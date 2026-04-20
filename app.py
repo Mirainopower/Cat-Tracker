@@ -66,8 +66,8 @@ if st.session_state.records:
 
     filtered_df = df[df["Cat"] == selected_filter_cat]
 
-st.subheader("Feeding Record")
-st.dataframe(df.reset_index(drop=True), use_container_width=True)
+    st.subheader("Feeding Record")
+    st.dataframe(df.reset_index(drop=True), use_container_width=True)
 
     st.subheader("Meal Type Summary")
 
