@@ -71,16 +71,26 @@ if st.session_state.records:
 
     st.subheader("Feeding Record")
     st.dataframe(filtered_df, use_container_width=True)
+st.subheader("Weekly Feeding Tracker by Cat")
 
-    st.subheader("Food Frequency Chart")
-    food_count = filtered_df["Food"].value_counts()
+df["Date"] = pd.to_datetime(df["Date"])
+
+today = pd.Timestamp.today()
+start_of_week = today - pd.Timedelta(days=today.weekday())
+end_of_week = start_of_week + pd.Timedelta(days=6)
+
+weekly_df = df[(df["Date"] >= start_of_week) & (df["Date"] <= end_of_week)]
+
+if not weekly_df.empty:
+    weekly_count = weekly_df["Cat"].value_counts()
 
     fig, ax = plt.subplots()
-    ax.bar(food_count.index, food_count.values)
-    ax.set_title("Food Frequency")
-    ax.set_xlabel("Food Type")
-    ax.set_ylabel("Times Fed")
+    ax.bar(weekly_count.index, weekly_count.values)
+    ax.set_title("Weekly Feeding Tracker by Cat")
+    ax.set_xlabel("Cat Name")
+    ax.set_ylabel("Times Fed This Week")
     plt.xticks(rotation=0)
     st.pyplot(fig)
 else:
-    st.info("No feeding records yet. Add one from the sidebar.")
+    st.info("No feeding records for this week yet.")
+ 
