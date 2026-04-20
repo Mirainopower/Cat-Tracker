@@ -65,7 +65,12 @@ if st.session_state.records:
     )
 
     filtered_df = df[df["Cat"] == selected_filter_cat]
+st.subheader("Saved Cats")
 
+saved_cats = df["Cat"].unique()
+
+for cat_name in saved_cats:
+    st.write(f"• {cat_name}")
     st.subheader(f"Feeding Record for {selected_filter_cat}")
     st.dataframe(filtered_df.reset_index(drop=True), use_container_width=True)
 
