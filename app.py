@@ -80,7 +80,7 @@ if st.session_state.records:
     ax.set_title("Food Frequency")
     ax.set_xlabel("Food Type")
     ax.set_ylabel("Times Fed")
-    plt.xticks(rotation=20)
+    plt.xticks(rotation=0)
     st.pyplot(fig)
 else:
     st.info("No feeding records yet. Add one from the sidebar.")
