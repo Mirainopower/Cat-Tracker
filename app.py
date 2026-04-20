@@ -22,13 +22,6 @@ vitamin_options = ["Yes", "No"]
 if "records" not in st.session_state:
     st.session_state.records = []
 
-st.subheader("Add Feeding Record")
-
-cat = st.selectbox("Select Cat Name:", cat_names)
-food = st.selectbox("Select Food Type:", food_types)
-selected_date = st.date_input("Select Date:", value=date.today())
-vitamin = st.selectbox("Did you give vitamin?", vitamin_options)
-
 def get_note(food_name):
     if food_name in ["Ahi Tuna & Chicken Recipe in Chicken Consomme", "Wild Salmon & Chicken"]:
         return "Mixed dinner!"
@@ -38,7 +31,15 @@ def get_note(food_name):
         return "Chicken day!"
     return ""
 
-if st.button("Save Record"):
+# Sidebar
+st.sidebar.header("Add Feeding Record")
+
+cat = st.sidebar.selectbox("Select Cat Name:", cat_names)
+food = st.sidebar.selectbox("Select Food Type:", food_types)
+selected_date = st.sidebar.date_input("Select Date:", value=date.today())
+vitamin = st.sidebar.selectbox("Did you give vitamin?", vitamin_options)
+
+if st.sidebar.button("Save Record"):
     note = get_note(food)
     new_record = {
         "Date": str(selected_date),
@@ -50,24 +51,25 @@ if st.button("Save Record"):
     st.session_state.records.append(new_record)
     st.success("Record saved!")
 
-if st.button("Clear All Records"):
+if st.sidebar.button("Clear All Records"):
     st.session_state.records = []
     st.warning("All records cleared.")
 
 if st.session_state.records:
     df = pd.DataFrame(st.session_state.records)
 
-    st.subheader("Feeding Record")
-    st.dataframe(df, use_container_width=True)
-
-    st.subheader("Filter by Cat")
-    selected_filter_cat = st.selectbox("Choose a cat to view records:", ["All"] + cat_names)
+    st.sidebar.header("Filter Options")
+    selected_filter_cat = st.sidebar.selectbox(
+        "Choose a cat to view records:",
+        ["All"] + cat_names
+    )
 
     if selected_filter_cat == "All":
         filtered_df = df
     else:
         filtered_df = df[df["Cat"] == selected_filter_cat]
 
+    st.subheader("Feeding Record")
     st.dataframe(filtered_df, use_container_width=True)
 
     st.subheader("Food Frequency Chart")
@@ -81,4 +83,4 @@ if st.session_state.records:
     plt.xticks(rotation=20)
     st.pyplot(fig)
 else:
-    st.info("No feeding records yet. Add one above.")
+    st.info("No feeding records yet. Add one from the sidebar.")
