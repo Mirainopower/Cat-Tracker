@@ -71,18 +71,23 @@ if st.session_state.records:
 
     st.subheader("Meal Type Summary")
 
-    meal_summary = filtered_df["Note"].value_counts().reindex(
-        ["Fish day!", "Mixed dinner!", "Chicken day!"],
-        fill_value=0
-    )
+  meal_summary = filtered_df["Note"].value_counts()
 
-    if meal_summary.sum() > 0:
-        fig, ax = plt.subplots()
-        ax.pie(
-            meal_summary.values,
-            labels=meal_summary.index,
-            autopct="%1.0f%%"
-        )
+# remove 0 values so labels don’t overlap
+meal_summary = meal_summary[meal_summary > 0]
+
+fig, ax = plt.subplots()
+ax.pie(
+    meal_summary.values,
+    labels=meal_summary.index,
+    autopct="%1.0f%%",
+    startangle=90,
+    wedgeprops={'edgecolor': 'white'}
+)
+
+ax.set_title(f"{selected_filter_cat}'s Meal Types")
+
+st.pyplot(fig)
         ax.set_title(f"{selected_filter_cat}'s Meal Types")
         st.pyplot(fig)
     else:
