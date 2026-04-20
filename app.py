@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
 from datetime import date
 
 st.set_page_config(page_title="Cat Feeding Tracker", page_icon="🐾")
@@ -59,7 +60,7 @@ if st.session_state.records:
 
     st.sidebar.header("Filter Options")
     selected_filter_cat = st.sidebar.selectbox(
-        "Select a name to view records:",
+        "Choose a cat to view records:",
         cat_names
     )
 
@@ -68,34 +69,24 @@ if st.session_state.records:
     st.subheader(f"Feeding Record for {selected_filter_cat}")
     st.dataframe(filtered_df, use_container_width=True)
 
-    today = pd.Timestamp.today().normalize()
-    start_of_week = today - pd.Timedelta(days=today.weekday())
-    end_of_week = start_of_week + pd.Timedelta(days=6)
+    st.subheader("Meal Type Summary")
 
-    weekly_cat_df = filtered_df[
-        (filtered_df["Date"] >= start_of_week) & (filtered_df["Date"] <= end_of_week)
-    ]
-
-    weekly_vitamins = (weekly_cat_df["Vitamin"] == "Yes").sum()
-st.subheader("Meal Type Summary")
-
-meal_summary = filtered_df["Note"].value_counts().reindex(
-    ["Fish day!", "Mixed dinner!", "Chicken day!"],
-    fill_value=0
-)
-
-if meal_summary.sum() > 0:
-    fig, ax = plt.subplots()
-    ax.pie(
-        meal_summary.values,
-        labels=meal_summary.index,
-        autopct="%1.0f%%"
+    meal_summary = filtered_df["Note"].value_counts().reindex(
+        ["Fish day!", "Mixed dinner!", "Chicken day!"],
+        fill_value=0
     )
-    ax.set_title(f"{selected_filter_cat}'s Meal Types")
-    st.pyplot(fig)
-else:
-    st.info("No meal type data available yet.")
-    
+
+    if meal_summary.sum() > 0:
+        fig, ax = plt.subplots()
+        ax.pie(
+            meal_summary.values,
+            labels=meal_summary.index,
+            autopct="%1.0f%%"
+        )
+        ax.set_title(f"{selected_filter_cat}'s Meal Types")
+        st.pyplot(fig)
+    else:
+        st.info("No meal type data available yet.")
 
 else:
     st.info("No feeding records yet. Add one from the sidebar.")
