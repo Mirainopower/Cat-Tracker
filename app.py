@@ -67,25 +67,26 @@ if st.session_state.records:
     filtered_df = df[df["Cat"] == selected_filter_cat]
 
     st.subheader(f"Feeding Record for {selected_filter_cat}")
-    st.dataframe(filtered_df, use_container_width=True)
+    st.dataframe(filtered_df.reset_index(drop=True), use_container_width=True)
 
     st.subheader("Meal Type Summary")
 
-meal_summary = filtered_df["Note"].value_counts()
+    meal_summary = filtered_df["Note"].value_counts()
+    meal_summary = meal_summary[meal_summary > 0]
 
-# remove 0 values
-meal_summary = meal_summary[meal_summary > 0]
+    if not meal_summary.empty:
+        fig, ax = plt.subplots()
+        ax.pie(
+            meal_summary.values,
+            labels=meal_summary.index,
+            autopct="%1.0f%%",
+            startangle=90,
+            wedgeprops={"edgecolor": "white"}
+        )
+        ax.set_title(f"{selected_filter_cat}'s Meal Types")
+        st.pyplot(fig)
+    else:
+        st.info("No meal data available yet.")
 
-if not meal_summary.empty:
-    fig, ax = plt.subplots()
-    ax.pie(
-        meal_summary.values,
-        labels=meal_summary.index,
-        autopct="%1.0f%%",
-        startangle=90,
-        wedgeprops={'edgecolor': 'white'}
-    )
-    ax.set_title(f"{selected_filter_cat}'s Meal Types")
-    st.pyplot(fig)
 else:
-    st.info("No meal data available yet.")
+    st.info("No feeding records yet. Add one from the sidebar.")
