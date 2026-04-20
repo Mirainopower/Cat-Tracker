@@ -71,27 +71,21 @@ if st.session_state.records:
 
     st.subheader("Meal Type Summary")
 
-  meal_summary = filtered_df["Note"].value_counts()
+meal_summary = filtered_df["Note"].value_counts()
 
-# remove 0 values so labels don’t overlap
+# remove 0 values
 meal_summary = meal_summary[meal_summary > 0]
 
-fig, ax = plt.subplots()
-ax.pie(
-    meal_summary.values,
-    labels=meal_summary.index,
-    autopct="%1.0f%%",
-    startangle=90,
-    wedgeprops={'edgecolor': 'white'}
-)
-
-ax.set_title(f"{selected_filter_cat}'s Meal Types")
-
-st.pyplot(fig)
-        ax.set_title(f"{selected_filter_cat}'s Meal Types")
-        st.pyplot(fig)
-    else:
-        st.info("No meal type data available yet.")
-
+if not meal_summary.empty:
+    fig, ax = plt.subplots()
+    ax.pie(
+        meal_summary.values,
+        labels=meal_summary.index,
+        autopct="%1.0f%%",
+        startangle=90,
+        wedgeprops={'edgecolor': 'white'}
+    )
+    ax.set_title(f"{selected_filter_cat}'s Meal Types")
+    st.pyplot(fig)
 else:
-    st.info("No feeding records yet. Add one from the sidebar.")
+    st.info("No meal data available yet.")
