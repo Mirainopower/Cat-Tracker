@@ -55,29 +55,33 @@ if st.sidebar.button("Clear All Records"):
 
 if st.session_state.records:
     df = pd.DataFrame(st.session_state.records)
+    df["Date"] = pd.to_datetime(df["Date"])
 
     st.sidebar.header("Filter Options")
     selected_filter_cat = st.sidebar.selectbox(
         "Choose a cat to view records:",
-        ["All"] + cat_names
+        cat_names
     )
 
-    if selected_filter_cat == "All":
-        filtered_df = df
-    else:
-        filtered_df = df[df["Cat"] == selected_filter_cat]
+    filtered_df = df[df["Cat"] == selected_filter_cat]
 
-    st.subheader("Feeding Record")
+    st.subheader(f"Feeding Record for {selected_filter_cat}")
     st.dataframe(filtered_df, use_container_width=True)
 
-    st.subheader("Summary")
+    today = pd.Timestamp.today().normalize()
+    start_of_week = today - pd.Timedelta(days=today.weekday())
+    end_of_week = start_of_week + pd.Timedelta(days=6)
 
-    total_feedings = len(df)
-    total_vitamins = (df["Vitamin"] == "Yes").sum()
+    weekly_cat_df = filtered_df[
+        (filtered_df["Date"] >= start_of_week) & (filtered_df["Date"] <= end_of_week)
+    ]
 
-    col1, col2 = st.columns(2)
-    col1.metric("Total Feedings", total_feedings)
-    col2.metric("Vitamins Given", total_vitamins)
+    weekly_vitamins = (weekly_cat_df["Vitamin"] == "Yes").sum()
+
+    st.subheader("Weekly Summary")
+
+    col1 = st.columns(1)[0]
+    col1.metric(f"{selected_filter_cat}'s Weekly Vitamins Given", weekly_vitamins)
 
 else:
     st.info("No feeding records yet. Add one from the sidebar.")
