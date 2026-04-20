@@ -6,7 +6,7 @@ from datetime import date
 st.set_page_config(page_title="Cat Feeding Tracker", page_icon="🐾")
 
 st.title("🐾 Cat Feeding Tracker")
-st.write("Track your cats' meals, vitamins, and weekly feeding history.")
+st.write("Track your cats' meals, vitamins, and feeding history.")
 
 cat_names = ["Mew", "Nala", "Hime", "Doja", "Haru"]
 
@@ -57,7 +57,6 @@ if st.sidebar.button("Clear All Records"):
 
 if st.session_state.records:
     df = pd.DataFrame(st.session_state.records)
-    df["Date"] = pd.to_datetime(df["Date"])
 
     st.sidebar.header("Filter Options")
     selected_filter_cat = st.sidebar.selectbox(
@@ -73,46 +72,15 @@ if st.session_state.records:
     st.subheader("Feeding Record")
     st.dataframe(filtered_df, use_container_width=True)
 
-    # Food summary by selected cat
-    st.subheader("Food Summary")
+    st.subheader("Food Frequency Chart")
+    food_count = filtered_df["Food"].value_counts()
 
-    if not filtered_df.empty:
-        food_summary = filtered_df["Food"].value_counts().reindex(food_types, fill_value=0)
-
-        summary_df = pd.DataFrame({
-            "Food Type": food_summary.index,
-            "Times Eaten": food_summary.values
-        })
-
-        st.dataframe(summary_df, use_container_width=True)
-
-        fig_food, ax_food = plt.subplots()
-        ax_food.bar(food_summary.index, food_summary.values)
-        ax_food.set_title(f"Food Count for {selected_filter_cat}" if selected_filter_cat != "All" else "Food Count for All Cats")
-        ax_food.set_xlabel("Food Type")
-        ax_food.set_ylabel("Times Eaten")
-        plt.xticks(rotation=20)
-        st.pyplot(fig_food)
-    else:
-        st.info("No feeding records for this cat yet.")
-
-    # Weekly tracker by cat
-    st.subheader("Weekly Feeding Tracker by Cat")
-
-    today = pd.Timestamp.today()
-    start_of_week = today - pd.Timedelta(days=today.weekday())
-    end_of_week = start_of_week + pd.Timedelta(days=6)
-
-    weekly_df = df[(df["Date"] >= start_of_week) & (df["Date"] <= end_of_week)]
-    weekly_count = weekly_df["Cat"].value_counts().reindex(cat_names, fill_value=0)
-
-    fig_weekly, ax_weekly = plt.subplots()
-    ax_weekly.bar(weekly_count.index, weekly_count.values)
-    ax_weekly.set_title("Weekly Feeding Tracker by Cat")
-    ax_weekly.set_xlabel("Cat Name")
-    ax_weekly.set_ylabel("Times Fed This Week")
-    plt.xticks(rotation=0)
-    st.pyplot(fig_weekly)
-
+    fig, ax = plt.subplots()
+    ax.bar(food_count.index, food_count.values)
+    ax.set_title("Food Frequency")
+    ax.set_xlabel("Food Type")
+    ax.set_ylabel("Times Fed")
+    plt.xticks(rotation=20)
+    st.pyplot(fig)
 else:
     st.info("No feeding records yet. Add one from the sidebar.")
