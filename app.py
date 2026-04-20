@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 from datetime import date
 
 st.set_page_config(page_title="Cat Feeding Tracker", page_icon="🐾")
@@ -31,7 +30,6 @@ def get_note(food_name):
         return "Chicken day!"
     return ""
 
-# Sidebar
 st.sidebar.header("Add Feeding Record")
 
 cat = st.sidebar.selectbox("Select Cat Name:", cat_names)
@@ -71,15 +69,15 @@ if st.session_state.records:
 
     st.subheader("Feeding Record")
     st.dataframe(filtered_df, use_container_width=True)
-st.subheader("Summary")
 
-total_feedings = len(df)
-total_vitamins = (df["Vitamin"] == "Yes").sum()
+    st.subheader("Summary")
 
-col1, col2 = st.columns(2)
+    total_feedings = len(df)
+    total_vitamins = (df["Vitamin"] == "Yes").sum()
 
-col1.metric("Total Feedings", total_feedings)
-col2.metric("Vitamins Given", total_vitamins)
-   
+    col1, col2 = st.columns(2)
+    col1.metric("Total Feedings", total_feedings)
+    col2.metric("Vitamins Given", total_vitamins)
+
 else:
     st.info("No feeding records yet. Add one from the sidebar.")
