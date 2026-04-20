@@ -77,11 +77,25 @@ if st.session_state.records:
     ]
 
     weekly_vitamins = (weekly_cat_df["Vitamin"] == "Yes").sum()
+st.subheader("Meal Type Summary")
 
-    st.subheader("Weekly Summary")
+meal_summary = filtered_df["Note"].value_counts().reindex(
+    ["Fish day!", "Mixed dinner!", "Chicken day!"],
+    fill_value=0
+)
 
-    col1 = st.columns(1)[0]
-    col1.metric(f"{selected_filter_cat}'s Weekly Vitamins Given", weekly_vitamins)
+if meal_summary.sum() > 0:
+    fig, ax = plt.subplots()
+    ax.pie(
+        meal_summary.values,
+        labels=meal_summary.index,
+        autopct="%1.0f%%"
+    )
+    ax.set_title(f"{selected_filter_cat}'s Meal Types")
+    st.pyplot(fig)
+else:
+    st.info("No meal type data available yet.")
+    
 
 else:
     st.info("No feeding records yet. Add one from the sidebar.")
