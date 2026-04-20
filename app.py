@@ -71,16 +71,15 @@ if st.session_state.records:
 
     st.subheader("Feeding Record")
     st.dataframe(filtered_df, use_container_width=True)
+st.subheader("Summary")
 
-    st.subheader("Food Frequency Chart")
-    food_count = filtered_df["Food"].value_counts()
+total_feedings = len(df)
+total_vitamins = (df["Vitamin"] == "Yes").sum()
 
-    fig, ax = plt.subplots()
-    ax.bar(food_count.index, food_count.values)
-    ax.set_title("Food Frequency")
-    ax.set_xlabel("Food Type")
-    ax.set_ylabel("Times Fed")
-    plt.xticks(rotation=20)
-    st.pyplot(fig)
+col1, col2 = st.columns(2)
+
+col1.metric("Total Feedings", total_feedings)
+col2.metric("Vitamins Given", total_vitamins)
+   
 else:
     st.info("No feeding records yet. Add one from the sidebar.")
