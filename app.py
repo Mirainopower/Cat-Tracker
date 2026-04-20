@@ -59,7 +59,7 @@ if st.session_state.records:
 
     st.sidebar.header("Filter Options")
     selected_filter_cat = st.sidebar.selectbox(
-        "Choose a cat to view records:",
+        "Select a name to view records:",
         cat_names
     )
 
