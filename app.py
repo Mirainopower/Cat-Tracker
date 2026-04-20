@@ -6,7 +6,7 @@ from datetime import date
 st.set_page_config(page_title="Cat Feeding Tracker", page_icon="🐾")
 
 st.title("🐾 Cat Feeding Tracker")
-st.write("Track your cats' meals, vitamins, and feeding history.")
+st.write("Track your cats' meals, vitamins, and weekly feeding history.")
 
 cat_names = ["Mew", "Nala", "Hime", "Doja", "Haru"]
 
@@ -71,18 +71,18 @@ if st.session_state.records:
 
     st.subheader("Feeding Record")
     st.dataframe(filtered_df, use_container_width=True)
-st.subheader("Weekly Feeding Tracker by Cat")
 
-df["Date"] = pd.to_datetime(df["Date"])
+    st.subheader("Weekly Feeding Tracker by Cat")
 
-today = pd.Timestamp.today()
-start_of_week = today - pd.Timedelta(days=today.weekday())
-end_of_week = start_of_week + pd.Timedelta(days=6)
+    df["Date"] = pd.to_datetime(df["Date"])
 
-weekly_df = df[(df["Date"] >= start_of_week) & (df["Date"] <= end_of_week)]
+    today = pd.Timestamp.today()
+    start_of_week = today - pd.Timedelta(days=today.weekday())
+    end_of_week = start_of_week + pd.Timedelta(days=6)
 
-if not weekly_df.empty:
-    weekly_count = weekly_df["Cat"].value_counts()
+    weekly_df = df[(df["Date"] >= start_of_week) & (df["Date"] <= end_of_week)]
+
+    weekly_count = weekly_df["Cat"].value_counts().reindex(cat_names, fill_value=0)
 
     fig, ax = plt.subplots()
     ax.bar(weekly_count.index, weekly_count.values)
@@ -91,6 +91,6 @@ if not weekly_df.empty:
     ax.set_ylabel("Times Fed This Week")
     plt.xticks(rotation=0)
     st.pyplot(fig)
+
 else:
-    st.info("No feeding records for this week yet.")
- 
+    st.info("No feeding records yet. Add one from the sidebar.")
