@@ -35,6 +35,8 @@ food_types = [
 
 # OPTIONS TO TRACK WHETHER VITAMIN WAS GIVEN
 vitamin_options = ["Yes", "No"]
+# OPTIONS FOR MEAL TIME ( new feature) 
+meal_time_options = ["Breakfast", "Dinner"]
 
 # CREATE STORAGE FOR RECORDS IF IT DOES NOT EXIST
 if "records" not in st.session_state:
@@ -57,6 +59,7 @@ cat = st.sidebar.selectbox("Select Cat Name:", cat_names)
 food = st.sidebar.selectbox("Select Food Type:", food_types)
 selected_date = st.sidebar.date_input("Select Date:", value=date.today())
 vitamin = st.sidebar.selectbox("Did you give vitamin?", vitamin_options)
+meal_time = st.sidebar.selectbox("Select Meal Time:", meal_time_options)
 
 # SAVE RECORD BUTTON
 if st.sidebar.button("Save Record"):
@@ -67,6 +70,7 @@ if st.sidebar.button("Save Record"):
         "Date": str(selected_date),
         "Cat": cat,
         "Birth Year": cat_birth_year[cat],
+        "Meal Time": meal_time, 
         "Food": food,
         "Note": note,
         "Vitamin": vitamin
