@@ -36,7 +36,7 @@ food_types = [
 
 # OPTIONS TO TRACK WHETHER VITAMIN WAS GIVEN
 vitamin_options = ["Yes", "No"]
-# OPTIONS FOR MEAL TIME ( new feature) 
+# OPTIONS FOR MEAL TIME  
 meal_time_options = ["Breakfast", "Dinner"]
 
 # CREATE STORAGE FOR RECORDS IF IT DOES NOT EXIST
@@ -90,7 +90,7 @@ if st.session_state.records:
     df["Date"] = pd.to_datetime(df["Date"])
     df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
 
-    # FILTER OPTION
+    # FILTER RECORDS BY SELECTED CAT 
     st.sidebar.header("Filter Options")
     selected_filter_cat = st.sidebar.selectbox(
         "Choose a cat to view records:",
