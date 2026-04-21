@@ -87,16 +87,16 @@ if st.session_state.records:
         ["Newest First", "Oldest First"]
     )
 
-     filtered_df = df[df["Cat"] == selected_filter_cat]
+filtered_df = df[df["Cat"] == selected_filter_cat]
 
 # filter by selected date
-    filtered_df = filtered_df[filtered_df["Date"].dt.date == selected_filter_date]
+filtered_df = filtered_df[filtered_df["Date"].dt.date == selected_filter_date]
 
     # APPLY SORTING
     if sort_order == "Newest First":
-        sorted_df = df.sort_values(by="Date", ascending=False)
+        sorted_df = filtered_df.sort_values(by="Date", ascending=False)
     else:
-        sorted_df = df.sort_values(by="Date", ascending=True)
+        sorted_df = filtered_df.sort_values(by="Date", ascending=True)
 
     # DISPLAY ALL RECORDS
     st.subheader("Feeding Record")
