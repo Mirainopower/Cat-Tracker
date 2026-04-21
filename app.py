@@ -74,6 +74,8 @@ if st.session_state.records:
 
     # FILTER OPTION
     st.sidebar.header("Filter Options")
+    # allow user to filter records by a specific date
+    selected_filter_date = st.sidebar.date_input("Choose a date to filter:")
     selected_filter_cat = st.sidebar.selectbox(
         "Choose a cat to view records:",
         cat_names
@@ -85,7 +87,10 @@ if st.session_state.records:
         ["Newest First", "Oldest First"]
     )
 
-    filtered_df = df[df["Cat"] == selected_filter_cat]
+     filtered_df = df[df["Cat"] == selected_filter_cat]
+
+# filter by selected date
+    filtered_df = filtered_df[filtered_df["Date"].dt.date == selected_filter_date]
 
     # APPLY SORTING
     if sort_order == "Newest First":
