@@ -72,37 +72,38 @@ if st.session_state.records:
     df = pd.DataFrame(st.session_state.records)
     df["Date"] = pd.to_datetime(df["Date"])
 
-    # FILTER OPTION
+# FILTER OPTIONS
     st.sidebar.header("Filter Options")
-    # allow user to filter records by a specific date
-    selected_filter_date = st.sidebar.date_input("Choose a date to filter:")
+
     selected_filter_cat = st.sidebar.selectbox(
         "Choose a cat to view records:",
         cat_names
     )
 
-    # SORT OPTION (NEW FEATURE)
-    sort_order = st.sidebar.selectbox(
-        "Sort records by date:",
-        ["Newest First", "Oldest First"]
+    selected_filter_date = st.sidebar.date_input(
+        "Choose a date to filter:"
     )
 
-filtered_df = df[df["Cat"] == selected_filter_cat]
+    sort_order = st.sidebar.selectbox(
+        "Sort by Date:",
+        ["Newest → Oldest", "Oldest → Newest"]
+    )
 
-# filter by selected date
-filtered_df = filtered_df[filtered_df["Date"].dt.date == selected_filter_date]
+    # APPLY FILTERS
+    filtered_df = df[df["Cat"] == selected_filter_cat]
+    filtered_df = filtered_df[filtered_df["Date"].dt.date == selected_filter_date]
 
     # APPLY SORTING
-    if sort_order == "Newest First":
+    if sort_order == "Newest → Oldest":
         sorted_df = filtered_df.sort_values(by="Date", ascending=False)
     else:
         sorted_df = filtered_df.sort_values(by="Date", ascending=True)
 
-    # DISPLAY ALL RECORDS
+    # DISPLAY TABLE
     st.subheader("Feeding Record")
     st.dataframe(sorted_df.reset_index(drop=True), use_container_width=True)
 
-    # MEAL TYPE SUMMARY CHART
+    # MEAL SUMMARY
     st.subheader("Meal Type Summary")
 
     meal_summary = filtered_df["Note"].value_counts()
@@ -123,4 +124,4 @@ filtered_df = filtered_df[filtered_df["Date"].dt.date == selected_filter_date]
         st.info("No meal data available yet.")
 
 else:
-    st.info("No feeding records yet. Add one from the sidebar.")
+    st.info("No feeding records yet. Add one from the sidebar.")   
