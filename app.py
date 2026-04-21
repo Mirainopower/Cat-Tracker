@@ -16,11 +16,11 @@ st.write("Track your cats' meals, vitamins, and feeding history.")
 # LIST OF CAT NAMES USED IN THE APP
 cat_names = ["Mew", "Nala", "Hime", "Doja", "Haru"]
 cat_ages = {
-    "Mew": 8,
-    "Nala": 2,
-    "Hime": 2,
-    "Doja": 3,   
-    "Haru": 4    
+    "Mew": 2017,
+    "Nala": 2023,
+    "Hime": 2023,
+    "Doja": 2022,   
+    "Haru": 2022    
 }
 
 
@@ -63,7 +63,7 @@ if st.sidebar.button("Save Record"):
     new_record = {
         "Date": str(selected_date),
         "Cat": cat,
-        "Age": cat_ages[cat], 
+        "Age": current_year - cat_birth_year[cat],
         "Food": food,
         "Note": note,
         "Vitamin": vitamin
