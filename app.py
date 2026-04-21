@@ -16,6 +16,7 @@ st.write("Track your cats' meals, vitamins, and feeding history.")
 
 # LIST OF CAT NAMES USED IN THE APP
 cat_names = ["Mew", "Nala", "Hime", "Doja", "Haru"]
+# DICTIONARY THAT STORES EACH CAT'S BIRTH YEAR
 cat_birth_year = {
     "Mew": 2017,
     "Nala": 2023,
@@ -87,6 +88,7 @@ if st.sidebar.button("Clear All Records"):
 if st.session_state.records:
     df = pd.DataFrame(st.session_state.records)
     df["Date"] = pd.to_datetime(df["Date"])
+    df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
 
     # FILTER OPTION
     st.sidebar.header("Filter Options")
