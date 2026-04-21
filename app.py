@@ -79,23 +79,11 @@ if st.session_state.records:
         cat_names
     )
 
-    # SORT OPTION (NEW FEATURE)
-    sort_order = st.sidebar.selectbox(
-        "Sort records by date:",
-        ["Newest First", "Oldest First"]
-    )
-
     filtered_df = df[df["Cat"] == selected_filter_cat]
-
-    # APPLY SORTING
-    if sort_order == "Newest First":
-        sorted_df = df.sort_values(by="Date", ascending=False)
-    else:
-        sorted_df = df.sort_values(by="Date", ascending=True)
-
+ 
     # DISPLAY ALL RECORDS
     st.subheader("Feeding Record")
-    st.dataframe(sorted_df.reset_index(drop=True), use_container_width=True)
+    st.dataframe(df.reset_index(drop=True), use_container_width=True)
 
     # MEAL TYPE SUMMARY CHART
     st.subheader("Meal Type Summary")
