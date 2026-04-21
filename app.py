@@ -2,7 +2,8 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import date, datetime
+from datetime import date
+
 
 # SET THE PAGE TITLE AND ICON THAT APPEARS IN THE BROWSER
 st.set_page_config(page_title="Cat Feeding Tracker", page_icon="🐾")
@@ -15,7 +16,7 @@ st.write("Track your cats' meals, vitamins, and feeding history.")
 
 # LIST OF CAT NAMES USED IN THE APP
 cat_names = ["Mew", "Nala", "Hime", "Doja", "Haru"]
-cat_ages = {
+cat_birth_year = {
     "Mew": 2017,
     "Nala": 2023,
     "Hime": 2023,
@@ -60,12 +61,12 @@ vitamin = st.sidebar.selectbox("Did you give vitamin?", vitamin_options)
 # SAVE RECORD BUTTON
 if st.sidebar.button("Save Record"):
     note = get_note(food)
-    current_year = datetime.now().year  
+  
    
     new_record = {
         "Date": str(selected_date),
         "Cat": cat,
-        "Age": current_year - cat_birth_year[cat],
+        "Birth Year": cat_birth_year[cat],
         "Food": food,
         "Note": note,
         "Vitamin": vitamin
